@@ -1,14 +1,19 @@
 {
-  "courses": [
-    {
-      "name": "HTML",
-      "description": "10",
-      "id": 1
-    },
-    {
-      "name": "CSS",
-      "description": "20",
-      "id": 2
-    }
-  ]
+    "courses": [
+      {
+        "name": "HTML",
+        "description": "10",
+        "id": 1
+      },
+      {
+        "name": "CSS",
+        "description": "20",
+        "id": 2
+      },
+      {
+        "name": "JavaScript",
+        "description": "30",
+        "id": 3
+      }
+    ]
 }
