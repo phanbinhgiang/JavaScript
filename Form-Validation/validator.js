@@ -47,3 +47,21 @@ Validator.isEmail = function (selector) {
     },
   };
 };
+
+Validator.minLength = function (selector, min) {
+  return {
+    selector: selector,
+    test: function (value) {
+      return value.length >= min ? undefined : `Vui long nhap toi thieu ${min} ki tu`;
+    },
+  };
+};
+
+Validator.isConfirmed = function (selector, getConfirmValue) {
+  return {
+    selector: selector,
+    test: function (value) {
+      return value === getConfirmValue() ? undefined : 'Gia tri nhap vao khong chinh xac';
+    },
+  };
+};

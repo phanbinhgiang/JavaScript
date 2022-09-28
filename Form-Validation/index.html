@@ -52,9 +52,7 @@
         </div>
 
         <div class="form-group">
-          <label for="password_confirmation" class="form-label"
-            >Nhập lại mật khẩu</label
-          >
+          <label for="password_confirmation" class="form-label">Nhập lại mật khẩu</label>
           <input
             id="password_confirmation"
             name="password_confirmation"
@@ -73,7 +71,14 @@
     <script>
       Validator({
         form: 'form-1',
-        rules: [Validator.isRequired('#fullname'), Validator.isEmail('#email')],
+        rules: [
+          Validator.isRequired('#fullname'),
+          Validator.isEmail('#email'),
+          Validator.minLength('#password', 6),
+          Validator.isConfirmed('#password_confirmation', function () {
+            return document.querySelector('#form-1 #password').value;
+          }),
+        ],
       });
     </script>
   </body>
