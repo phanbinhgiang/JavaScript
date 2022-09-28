@@ -72,13 +72,18 @@
       Validator({
         form: 'form-1',
         rules: [
-          Validator.isRequired('#fullname'),
+          Validator.isRequired('#fullname', 'Vui long nhap ten day du cua ban'),
+          Validator.isRequired('#email'),
           Validator.isEmail('#email'),
           Validator.minLength('#password', 6),
           Validator.isConfirmed('#password_confirmation', function () {
             return document.querySelector('#form-1 #password').value;
           }),
+          Validator.isRequired('#password_confirmation'),
         ],
+        onSubmit: function (data) {
+          console.log(data);
+        },
       });
     </script>
   </body>
