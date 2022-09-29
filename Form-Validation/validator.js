@@ -1,7 +1,7 @@
 function Validator(options) {
   var selectorRules = {};
 
-  var formElement = document.getElementById(options.form);
+  var formElement = document.querySelector(options.form);
   if (formElement) {
     formElement.onsubmit = function (e) {
       e.preventDefault();
@@ -39,39 +39,62 @@ function Validator(options) {
       var inputElement = document.querySelector(rule.selector);
       if (inputElement) {
         inputElement.onblur = function () {
-          validate(inputElement, rule, selectorRules);
+          validate(inputElement, rule);
         };
 
         inputElement.oninput = function () {
-          var errorElement = inputElement.parentElement.querySelector('.form-message');
+          var errorElement = getParent(inputElement, options.formGroupSelector).querySelector(
+            options.errorSelector,
+          );
           errorElement.innerText = '';
-          inputElement.parentElement.classList.remove('invalid');
+          getParent(inputElement, options.formGroupSelector).classList.remove('invalid');
         };
       }
     });
   }
-}
 
-function validate(inputElement, rule, selectorRules) {
-  var errorElement = inputElement.parentElement.querySelector('.form-message');
+  function validate(inputElement, rule) {
+    var errorElement = getParent(inputElement, options.formGroupSelector).querySelector(
+      '.form-message',
+    );
 
-  var rules = selectorRules[rule.selector];
+    var rules = selectorRules[rule.selector];
 
-  for (var i = 0; i < rules.length; i++) {
-    errorMessage = rules[i](inputElement.value);
+    for (var i = 0; i < rules.length; i++) {
+      switch (inputElement.type) {
+        case 'radio':
+          errorMessage = rules[i](inputElement.value);
+          break;
+        case 'checkbox':
+          errorMessage = rules[i](inputElement.value);
+          break;
+        default:
+          errorMessage = rules[i](inputElement.value);
+      }
+
+      if (errorMessage) {
+        break;
+      }
+    }
+
     if (errorMessage) {
-      break;
+      errorElement.innerText = errorMessage;
+      getParent(inputElement, options.formGroupSelector).classList.add('invalid');
+    } else {
+      errorElement.innerText = '';
+      getParent(inputElement, options.formGroupSelector).classList.remove('invalid');
+    }
+    return errorMessage;
+  }
+
+  function getParent(element, selector) {
+    while (element.parentElement) {
+      if (element.parentElement.matches(selector)) {
+        return element.parentElement;
+      }
+      element = element.parentElement;
     }
   }
-
-  if (errorMessage) {
-    errorElement.innerText = errorMessage;
-    inputElement.parentElement.classList.add('invalid');
-  } else {
-    errorElement.innerText = '';
-    inputElement.parentElement.classList.remove('invalid');
-  }
-  return errorMessage;
 }
 
 Validator.isRequired = function (selector, message) {
